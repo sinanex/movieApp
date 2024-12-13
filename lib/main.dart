@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:movieapp/home.dart';
+import 'package:movieapp/provider.dart';
+import 'package:provider/provider.dart';
 
 void main(){
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,13 +15,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      darkTheme: ThemeData.dark(),
-      theme: ThemeData(
-        textTheme: GoogleFonts.poppinsTextTheme()
+    return ChangeNotifierProvider(
+      create: (context) => movieProvider(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        darkTheme: ThemeData.dark(),
+        theme: ThemeData(
+          textTheme: GoogleFonts.poppinsTextTheme()
+        ),
+        home: HomePage(),
       ),
-      home: HomePage(),
     );
   }
 }

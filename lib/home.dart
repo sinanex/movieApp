@@ -1,4 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:movieapp/provider.dart';
+import 'package:movieapp/tabbar.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -31,20 +35,32 @@ class HomePage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: const Color.fromARGB(255, 77, 71, 71),
                 ),
               ),
             ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  cont(),
-                  cont(),
-                  cont(),
-                  cont(),
-                  cont(),
-                ],
+            Expanded(
+              child: Consumer<movieProvider>(
+                builder: (context, value, child) => ListView.builder(
+                  itemCount: value.movieList.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    final image = value.movieList[index];
+                    return Padding(
+                        padding: const EdgeInsets.all(15.0),
+                    
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: CachedNetworkImage(
+                              fit: BoxFit.contain,
+                               placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                              imageUrl:
+                                  'https://image.tmdb.org/t/p/w200/${image.posterpath}',
+                            ),
+                          ),
+                        );
+                  },
+                ),
               ),
             ),
             Expanded(
@@ -52,27 +68,41 @@ class HomePage extends StatelessWidget {
                 length: 4,
                 child: Column(
                   children: [
-                     TabBar(
-                    indicatorSize: TabBarIndicatorSize.tab,
+                    TabBar(
+                      indicatorSize: TabBarIndicatorSize.tab,
                       labelStyle: style(),
                       unselectedLabelColor: Colors.white,
                       indicatorColor: const Color.fromARGB(255, 105, 104, 104),
                       labelColor: Colors.white,
                       dividerColor: Color.fromARGB(255, 27, 31, 37),
                       tabs: [
-                       Tab(text: 'Trending',),
-                        Tab(text: 'Up coming',),
-                        Tab(text: 'Top rated',),
-                        Tab(text: 'Popular',),
+                        Tab(
+                          text: 'Trending',
+                        ),
+                        Tab(
+                          text: 'Up coming',
+                        ),
+                        Tab(
+                          text: 'Top rated',
+                        ),
+                        Tab(
+                          text: 'Popular',
+                        ),
                       ],
                     ),
                     Expanded(
                       child: TabBarView(
                         children: [
-                          Center(child: Text('trending', style: TextStyle(color: Colors.white))),
-                          Center(child: Text('top Rated ', style: TextStyle(color: Colors.white))),
-                          Center(child: Text('Profile', style: TextStyle(color: Colors.white))),
-                          Center(child: Text('Profile', style: TextStyle(color: Colors.white))),
+                          TrendingPage(),
+                          Center(
+                              child: Text('top Rated ',
+                                  style: TextStyle(color: Colors.white))),
+                          Center(
+                              child: Text('Profile',
+                                  style: TextStyle(color: Colors.white))),
+                          Center(
+                              child: Text('Profile',
+                                  style: TextStyle(color: Colors.white))),
                         ],
                       ),
                     ),
@@ -86,19 +116,10 @@ class HomePage extends StatelessWidget {
     );
   }
 }
-TextStyle style(){
+
+TextStyle style() {
   return TextStyle(
     fontWeight: FontWeight.bold,
     fontSize: 14,
-  );
-}
-Widget cont() {
-  return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Container(
-      width: 180,
-      height: 280,
-      color: Colors.white,
-    ),
   );
 }
