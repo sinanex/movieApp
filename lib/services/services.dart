@@ -1,12 +1,54 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:movieapp/model.dart';
+import 'package:movieapp/model/model.dart';
 
 class MovieServices {
   Future<List<result>> popularMovie() async {
    const url =
         'https://api.themoviedb.org/3/movie/popular?api_key=d26a8dd97ecb04414d11287cd30cca91';
+    Dio dio = Dio();
+
+    try {
+      final response = await dio.get(url);
+      if (response.statusCode == 200) {
+        log("Request successful: ${response.statusMessage}");
+        final List data = response.data['results'];
+        return data.map((movie) => result.fromJson(movie)).toList();
+      } else {
+        log("Error: ${response.statusCode} - ${response.statusMessage}");
+      }
+    } catch (e) {
+      log("Exception: $e");
+    }
+
+    return [];
+  }
+
+      Future<List<result>> tvshows() async {
+   const url =
+        'https://api.themoviedb.org/3/tv/popular?api_key=d26a8dd97ecb04414d11287cd30cca91&page=1';
+    Dio dio = Dio();
+
+    try {
+      final response = await dio.get(url);
+      if (response.statusCode == 200) {
+        log("Request successful: ${response.statusMessage}");
+        final List data = response.data['results'];
+        return data.map((movie) => result.fromJson(movie)).toList();
+      } else {
+        log("Error: ${response.statusCode} - ${response.statusMessage}");
+      }
+    } catch (e) {
+      log("Exception: $e");
+    }
+
+    return [];
+  }
+    Future<List<result>> movies() async {
+   const url =
+
+       'https://api.themoviedb.org/3/movie/popular?api_key=d26a8dd97ecb04414d11287cd30cca91&page=1';
     Dio dio = Dio();
 
     try {
@@ -102,5 +144,6 @@ class MovieServices {
 
     return [];
   }
+
 
   }

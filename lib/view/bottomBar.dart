@@ -1,18 +1,31 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:movieapp/bottomBarprovider.dart';
-import 'package:movieapp/home.dart';
+import 'package:movieapp/controller/bottomBarprovider.dart';
+import 'package:movieapp/view/home.dart';
+import 'package:movieapp/view/searchPage.dart';
 import 'package:provider/provider.dart';
 
-class BottomNAvigation extends StatelessWidget {
+class BottomNAvigation extends StatefulWidget {
+int intialState;
+   BottomNAvigation({super.key, required this.intialState});
+
+  @override
+  State<BottomNAvigation> createState() => _BottomNAvigationState();
+}
+
+class _BottomNAvigationState extends State<BottomNAvigation> {
   final pages = [
     HomePage(),
-    Center(child: Text("data"),),
+   Searchpage(),
     Center(child: Text("data"),),
     Center(child: Text("data"),)
   ];
-   BottomNAvigation({super.key});
-
+@override
+  void initState() {
+    // TODO: implement initState
+    Provider.of<Bottombarprovider>(context,listen: false).currentIndex = widget.intialState;
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Consumer<Bottombarprovider>(

@@ -1,7 +1,11 @@
+import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:movieapp/movieCatogaryBase.dart';
-import 'package:movieapp/provider.dart';
+import 'package:movieapp/view/bottomBar.dart';
+import 'package:movieapp/view/movie.dart';
+import 'package:movieapp/view/widget/movieCatogaryBase.dart';
+import 'package:movieapp/controller/provider.dart';
+import 'package:movieapp/view/tvShows.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -13,24 +17,28 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   @override
-  void initState() {
-    super.initState();
-    Provider.of<movieProvider>(context, listen: false).trending();
+void initState() {
+   Provider.of<movieProvider>(context, listen: false).trending();
     Provider.of<movieProvider>(context, listen: false).popular();
     Provider.of<movieProvider>(context, listen: false).upcoming();
+    super.initState();
   }
-
   @override
   Widget build(BuildContext context) {
-    // MovieServices m = MovieServices();
-    // m.display();
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        toolbarHeight: 61,
-        backgroundColor: Colors.transparent,
-        flexibleSpace: Container(
-          child: Column(
+    return Consumer<movieProvider>(
+
+      builder:(context, value, child) { 
+        if(value.isLodding == false){
+          log("is lodding");
+          return const Center(child: CircularProgressIndicator(),);
+        }
+        return 
+        Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          toolbarHeight: 61,
+          backgroundColor: Colors.transparent,
+          flexibleSpace: Column(
             children: [
               const SizedBox(
                 height: 50,
@@ -49,16 +57,25 @@ class _HomePageState extends State<HomePage> {
                     child: SizedBox(
                       width: 330,
                       height: 60,
-                      child: TextField(
-                        
-                        decoration: InputDecoration(
-                     fillColor: Colors.white.withOpacity(0.2),
-                          filled: true,
-            
-                          suffixIcon: const Icon(Icons.search),
-                          hintText: "Search",
-                          hintStyle: style(),
-                          border: InputBorder.none,
+                      child: Consumer<movieProvider>(
+                        builder: (context, serch, child) => TextField(
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          controller: serch.serchCtrl,
+                          onSubmitted: (value) {
+                            serch.serchMovie();
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>BottomNAvigation(intialState: 1,)));
+                          },
+                          decoration: InputDecoration(
+                            fillColor: Colors.white.withOpacity(0.2),
+                            filled: true,
+                            suffixIcon: const Icon(Icons.search),
+                            hintText: "Search",
+                            hintStyle: style(),
+                            border: InputBorder.none,
+                          ),
                         ),
                       ),
                     ),
@@ -68,10 +85,8 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-      ),
-      backgroundColor: Colors.black,
-      body: SingleChildScrollView(
-        child: Expanded(
+        backgroundColor: Colors.black,
+        body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -91,27 +106,47 @@ class _HomePageState extends State<HomePage> {
                                     child: CircularProgressIndicator(),
                                   ),
                               imageUrl:
-                                  "$imgUrl${movie.TrendingMovie[14].posterpath}"),
+                                  "$imgUrl${movie.TrendingMovie.first.posterpath}"),
                         ),
                         Positioned(
                           top: 125,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              Text("Tv Shows", style: appBarStyle()),
+                              GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => tvShows(
+                                                  title: "TV Shows",
+                                                )));
+                                  },
+                                  child:
+                                      Text("Tv Shows", style: appBarStyle())),
                               const SizedBox(
                                 width: 150,
                               ),
-                              Text(
-                                "Movies",
-                                style: appBarStyle(),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => MoviePage(
+                                                title: 'Movies',
+                                              )));
+                                },
+                                child: Text(
+                                  "Movies",
+                                  style: appBarStyle(),
+                                ),
                               ),
                             ],
                           ),
                         ),
                         Positioned(
                             bottom: 100,
-                            child: Text("${movie.TrendingMovie[14].title}",
+                            child: Text("${movie.TrendingMovie.first.title}",
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 35))),
@@ -201,7 +236,7 @@ class _HomePageState extends State<HomePage> {
                       style: appBarStyle(),
                     ),
                     moviecatogary(movieList: value.popularMovie),
-                      Text(
+                    Text(
                       "Top Rated Movies",
                       style: appBarStyle(),
                     ),
@@ -212,7 +247,7 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-      ),
-    );
+      );
+   } );
   }
 }

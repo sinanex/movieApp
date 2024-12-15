@@ -1,9 +1,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:movieapp/bottomBar.dart';
-import 'package:movieapp/bottomBarprovider.dart';
-import 'package:movieapp/provider.dart';
+import 'package:movieapp/view/bottomBar.dart';
+import 'package:movieapp/controller/bottomBarprovider.dart';
+import 'package:movieapp/controller/provider.dart';
+import 'package:movieapp/view/splash.dart';
 import 'package:provider/provider.dart';
 
 void main(){
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           textTheme: GoogleFonts.poppinsTextTheme()
         ),
-        home: BottomNAvigation(),
+        home: SplashScreen(),
       ),
     );
   }

@@ -5,7 +5,9 @@ class result {
   String? posterpath;
   String? backdroppath;
   String? type;
+  String? name;
   result({
+    required this.name,
     required this.backdroppath,
     required this.title,
     required this.original,
@@ -15,6 +17,7 @@ class result {
   });
   factory result.fromJson(Map<String, dynamic> json) {
     return result(
+      name: json['name'],
       type: json['media_type'].toString(),
       backdroppath: json['backdrop_path'],
       title: json['title'],

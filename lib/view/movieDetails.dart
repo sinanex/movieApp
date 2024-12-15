@@ -1,8 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:movieapp/home.dart';
-import 'package:movieapp/movieCatogaryBase.dart';
+import 'package:movieapp/view/widget/movieCatogaryBase.dart';
 
 class Moviedetails extends StatelessWidget {
   String? image_path;
